@@ -1,8 +1,8 @@
 {
   "variables":{
-    "aws_region":"us-east-2",
+    "aws_region":"us-east-1",
     "ami_description":"EKS Kubernetes Worker AMI on AmazonLinux2 image (k8s: {{user `eks_version`}})",
-    "eks_version":"1.18",
+    "eks_version":"1.19",
     "root_volume_size": "10",
     "data_volume_size": "50",
     "vpc_id":"",
@@ -103,15 +103,17 @@
     {
       "type":"shell",
       "scripts": [
-        "./scripts/al2/cis-benchmark.sh",
+	"./scripts/al2/cis-benchmark.sh",
         "./scripts/shared/cis-docker.sh",
         "./scripts/shared/cis-eks.sh",
+	"./scripts/al2/hardening.sh",
         "./scripts/al2/cleanup.sh"
       ],
       "environment_vars": [
         "HTTP_PROXY={{user `http_proxy`}}",
         "HTTPS_PROXY={{user `https_proxy`}}",
-        "NO_PROXY={{user `no_proxy`}}"
+        "NO_PROXY={{user `no_proxy`}}",
+	"HARDENING_FLAG={{user `hardening_flag`}}"
       ],
       "execute_command":"echo 'packer' | {{.Vars}} sudo -S -E bash -eux '{{.Path}}'"
     }
